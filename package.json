@@ -1,0 +1,13 @@
+{
+  "name": "reservas-medicas-calendar",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calendario de disponibilidad y citas para doctores y dentistas.",
+  "scripts": {
+    "start": "npx serve . -l 5500",
+    "check": "node -e \"JSON.parse(require('fs').readFileSync('package.json','utf8')); console.log('package.json OK')\""
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8"
+  }
+}

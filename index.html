@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendario de Reservas Medicas</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./src/styles/main.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="calendar-panel container-xl">
+        <div class="calendar-hero text-center">
+          <p class="eyebrow mb-2">Disponibilidad medica</p>
+          <h1 class="display-6 fw-semibold mb-3">Calendario interactivo de citas</h1>
+          <p class="hero-copy mb-0">
+            Gestiona citas y su disponibilidad, reserva y sincroniza cambios 
+          </p>
+        </div>
+
+        <div class="card border-0 shadow-lg calendar-card">
+          <div class="card-body p-4 p-lg-5">
+            <div class="toolbar row g-3 align-items-end mb-4">
+              <div class="col-12 col-lg-3">
+                <label class="form-label" for="doctorId">Doctor</label>
+                <input class="form-control" id="doctorId" type="number" min="1" value="1" />
+              </div>
+              <div class="col-12 col-lg-3">
+                <label class="form-label" for="selectedDate">Fecha</label>
+                <input class="form-control" id="selectedDate" type="date" />
+              </div>
+              <div class="col-12 col-lg-2">
+                <label class="form-label" for="clinicId">Clinica</label>
+                <input class="form-control" id="clinicId" type="number" min="1" value="1" />
+              </div>
+              <div class="col-12 col-lg-4 d-flex gap-2 flex-wrap">
+                <button class="btn btn-primary flex-fill" id="loadDayButton" type="button">Cargar dia</button>
+                <button class="btn btn-outline-primary flex-fill" id="newSlotButton" type="button" data-bs-toggle="modal" data-bs-target="#slotModal">
+                  Configurar disponibilidad
+                </button>
+              </div>
+            </div>
+
+            <div class="summary-strip row g-3 mb-4" id="summaryStrip">
+              <div class="col-md-4">
+                <article class="summary-card">
+                  <span>Citas del dia</span>
+                  <strong id="slotCount">0</strong>
+                </article>
+              </div>
+              <div class="col-md-4">
+                <article class="summary-card">
+                  <span>Citas reservadas</span>
+                  <strong id="bookedCount">0</strong>
+                </article>
+              </div>
+              <div class="col-md-4">
+                <article class="summary-card">
+                  <span>Citas Disponibles</span>
+                  <strong id="availableCount">0</strong>
+                </article>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+              <div>
+                <h2 class="h4 mb-1" id="currentDateLabel">Agenda del dia</h2>
+                <p class="text-secondary mb-0">Selecciona un horario para editar disponibilidad o reservar una cita.</p>
+              </div>
+
+              <!--  Este Div no le veo funcionalidad 
+              <div class="legend d-flex gap-2 flex-wrap">
+                 <span class="badge text-bg-success-subtle text-success-emphasis">Disponible</span>
+                 <span class="badge text-bg-warning-subtle text-warning-emphasis">Reservado</span>
+                 <span class="badge text-bg-secondary-subtle text-secondary-emphasis">Bloqueado</span>
+              </div>
+              -->
+
+
+            </div>
+
+            <div class="table-responsive">
+              <table class="table align-middle slot-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Horario</th>
+                    <th scope="col">Disponibilidad</th>
+                    <th scope="col">Estatus cita</th>
+                    <th scope="col">Paciente / Notas</th>
+                    <th scope="col" class="text-end">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="slotsTableBody">
+                  <tr>
+                    <td colspan="5">
+                      <div class="empty-state">
+                        <h3 class="h5 mb-2">Sin datos cargados</h3>
+                        <p class="mb-0">Elige una fecha y pulsa cargar dia para consultar la disponibilidad.</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal fade" id="slotModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <form id="slotForm">
+            <div class="modal-header">
+              <div>
+                <h2 class="modal-title fs-5" id="slotModalTitle">Nuevo slot</h2>
+                <p class="text-secondary mb-0 small">Crea o edita un rango horario para el doctor.</p>
+              </div>
+              <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <input id="slotId" type="hidden" />
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label" for="slotDate">Fecha</label>
+                  <input class="form-control" id="slotDate" type="date" required />
+                </div>
+                <div class="col-12">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                      <label class="form-label mb-0">Franjas horarias</label>
+                      <p class="text-secondary small mb-0" id="slotRangesHelp">Agrega una o varias franjas para la fecha seleccionada.</p>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" id="addRangeButton" type="button">Agregar franja</button>
+                  </div>
+                  <div class="slot-ranges" id="slotRanges"></div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="slotClinicId">Clinica</label>
+                  <input class="form-control" id="slotClinicId" type="number" min="1" required />
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+              <button class="btn btn-primary" type="submit">Guardar slot</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="appointmentModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+          <form id="appointmentForm">
+            <div class="modal-header">
+              <div>
+                <h2 class="modal-title fs-5" id="appointmentModalTitle">Reservar cita</h2>
+                <p class="text-secondary mb-0 small">Vincula un paciente a un slot disponible.</p>
+              </div>
+              <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <input id="appointmentId" type="hidden" />
+              <input id="appointmentSlotId" type="hidden" />
+              <div class="alert alert-light border mb-3" id="appointmentSlotSummary"></div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="patientName">Nombre</label>
+                  <input class="form-control" id="patientName" type="text" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="patientLastName">Apellido</label>
+                  <input class="form-control" id="patientLastName" type="text" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="patientPhone">WhatsApp</label>
+                  <input class="form-control" id="patientPhone" type="tel" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="patientEmail">Email</label>
+                  <input class="form-control" id="patientEmail" type="email" />
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="appointmentNotes">Notas del paciente</label>
+                  <textarea class="form-control" id="appointmentNotes" rows="3" placeholder="Primera consulta, control, limpieza, etc."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-between">
+              <button class="btn btn-outline-danger d-none" id="deleteAppointmentButton" type="button">Eliminar cita</button>
+              <div class="d-flex gap-2 ms-auto">
+                <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" type="submit">Guardar cita</button>
+              </div>
+              
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div class="toast align-items-center border-0" id="feedbackToast" role="status" aria-live="polite" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body" id="toastMessage"></div>
+          <button class="btn-close btn-close-white me-2 m-auto" type="button" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="./src/js/app.js"></script>
+  </body>
+</html>

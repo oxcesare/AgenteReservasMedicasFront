@@ -1,0 +1,175 @@
+:root {
+  --app-bg: radial-gradient(circle at top, #d9efe8 0%, #f5efe4 42%, #f7f6f3 100%);
+  --panel-bg: rgba(255, 255, 255, 0.82);
+  --panel-border: rgba(15, 23, 42, 0.08);
+  --ink: #16302b;
+  --muted: #5d6f68;
+  --accent: #1f8a70;
+  --accent-dark: #145c4a;
+  --slot-border: rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--ink);
+  background: var(--app-bg);
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem 3rem;
+}
+
+.calendar-panel {
+  max-width: 1120px;
+}
+
+.calendar-hero {
+  max-width: 740px;
+  margin: 0 auto 1.75rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--accent-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.hero-copy {
+  color: var(--muted);
+}
+
+.calendar-card {
+  background: var(--panel-bg);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--panel-border);
+  border-radius: 28px;
+}
+
+.summary-card {
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.summary-card span {
+  color: var(--muted);
+}
+
+.summary-card strong {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.slot-table {
+  --bs-table-bg: transparent;
+  --bs-table-border-color: transparent;
+}
+
+.slot-table tbody tr {
+  border-bottom: 1px solid var(--slot-border);
+}
+
+.slot-time {
+  font-weight: 700;
+}
+
+.slot-subtitle {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.status-select {
+  min-width: 170px;
+}
+
+.patient-block strong {
+  display: block;
+}
+
+.patient-block small {
+  color: var(--muted);
+}
+
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-bg: var(--accent-dark);
+  --bs-btn-hover-border-color: var(--accent-dark);
+  --bs-btn-active-bg: var(--accent-dark);
+  --bs-btn-active-border-color: var(--accent-dark);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--accent-dark);
+  --bs-btn-border-color: rgba(31, 138, 112, 0.32);
+  --bs-btn-hover-bg: rgba(31, 138, 112, 0.08);
+  --bs-btn-hover-color: var(--accent-dark);
+  --bs-btn-hover-border-color: rgba(31, 138, 112, 0.5);
+}
+
+.modal-content {
+  border-radius: 24px;
+}
+
+.slot-ranges {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.slot-range-row {
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 0.9rem;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.slot-range-row.is-locked {
+  background: rgba(31, 138, 112, 0.06);
+}
+
+.slot-range-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
+.toast {
+  background: #16302b;
+  color: #fff;
+}
+
+@media (max-width: 767.98px) {
+  .app-shell {
+    padding-inline: 0.75rem;
+  }
+
+  .calendar-card {
+    border-radius: 20px;
+  }
+
+  .summary-card strong {
+    font-size: 1.4rem;
+  }
+}
